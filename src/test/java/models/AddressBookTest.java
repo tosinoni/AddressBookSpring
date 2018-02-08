@@ -1,3 +1,5 @@
+package models;
+
 import addressbook.models.AddressBook;
 import addressbook.models.BuddyInfo;
 import org.junit.Before;

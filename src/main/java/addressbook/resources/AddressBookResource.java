@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class AddressBookResource {
 
     @GetMapping
     public ResponseEntity getAddressBook(@RequestParam(value="name", required = false) String name,
-                                         @RequestParam(value="id", required = false) String id ) {
+                                         @RequestParam(value="id", required = false) String id, Model model) {
 
         Set<AddressBook> addressBookSet = new HashSet<>();
 
@@ -43,11 +44,12 @@ public class AddressBookResource {
             addressBookDao.findAll().forEach(addressBook -> addressBookSet.add(addressBook));
         }
 
+        model.addAttribute("addressBook", addressBookSet);
         return new ResponseEntity<>(addressBookSet, HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity addressBook(@RequestBody AddressBook addressBook) {
+    public ResponseEntity addressBook(@RequestBody AddressBook addressBook, Model model) {
         if (addressBook == null || StringUtils.isEmpty(addressBook.getName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request. Please provide address book name");
         } else if (addressBookDao.findByName(addressBook.getName()) != null) {
@@ -55,6 +57,8 @@ public class AddressBookResource {
         }
 
         AddressBook savedAddressBook = addressBookDao.save(addressBook);
+
+        model.addAttribute("addressBook", savedAddressBook);
         return new ResponseEntity<>(savedAddressBook, HttpStatus.CREATED);
     }
 
