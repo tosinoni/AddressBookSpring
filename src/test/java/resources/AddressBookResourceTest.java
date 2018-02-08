@@ -33,7 +33,7 @@ public class AddressBookResourceTest {
 
     @Before
     public void setUp() {
-        url = "http://localhost:" + port + "/address/";
+        url = "http://localhost:" + port + "/";
     }
     @Test
     public void testGetAddressBook() throws Exception {
